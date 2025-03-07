@@ -12,11 +12,14 @@ class BehaviorNode(Node):
             FieldDataMsg,
             'vision_data',
             self.vision_callback,
-            10)
+            10
+        )
         self.publisher_ = self.create_publisher(Twist, 'cmd_vel', 120)
-        self.behavior = GoToBall()
+        self.declare_parameter('planner_mode', 'straight')
+        planner_mode = self.get_parameter('planner_mode').value
+        self.behavior = GoToBall(planner_mode=planner_mode)
         self.robot_index = 0
-        self.get_logger().info("BehaviorNode inicializado.")
+        self.get_logger().info(f"BehaviorNode inicializado com planner_mode='{planner_mode}'.")
 
     def vision_callback(self, msg: FieldDataMsg):
         left_speed, right_speed = self.behavior.execute(msg, self.robot_index)
@@ -29,7 +32,8 @@ class BehaviorNode(Node):
         twist.angular.z = angular_vel
         self.publisher_.publish(twist)
         self.get_logger().info(
-            f"CmdVel publicado: linear = {linear_vel:.2f} m/s, angular = {angular_vel:.2f} rad/s")
+            f"CmdVel publicado: linear = {linear_vel:.2f} m/s, angular = {angular_vel:.2f} rad/s"
+        )
 
 def main(args=None):
     rclpy.init(args=args)
