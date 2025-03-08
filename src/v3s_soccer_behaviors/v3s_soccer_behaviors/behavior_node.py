@@ -2,7 +2,7 @@
 import rclpy
 from rclpy.node import Node
 from v3s_soccer_interfaces.msg import FieldData as FieldDataMsg
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import PoseStamped
 from v3s_soccer_behaviors.behaviors.gotoball import GoToBall
 
 class BehaviorNode(Node):
@@ -13,23 +13,26 @@ class BehaviorNode(Node):
             'vision_data',
             self.vision_callback,
             10)
-        self.publisher_ = self.create_publisher(Twist, 'cmd_vel', 120)
+
+        self.publisher_ = self.create_publisher(PoseStamped, 'target_pose', 120)
         self.behavior = GoToBall()
         self.robot_index = 0
-        self.get_logger().info("BehaviorNode inicializado.")
+        self.get_logger().info("BehaviorNode inicializado - publicando alvos para o sistema de trajetória.")
 
     def vision_callback(self, msg: FieldDataMsg):
-        left_speed, right_speed = self.behavior.execute(msg, self.robot_index)
-        wheel_separation = 0.5
-        linear_vel = (left_speed + right_speed) / 2.0
-        angular_vel = (right_speed - left_speed) / wheel_separation
+        
+        target_x, target_y, target_orientation = self.behavior.get_target_pose(msg, self.robot_index)
+        target_pose = PoseStamped()
+        target_pose.header.stamp = self.get_clock().now().to_msg()
+        target_pose.header.frame_id = "map"
+        target_pose.pose.position.x = target_x
+        target_pose.pose.position.y = target_y
+        target_pose.pose.orientation.z = target_orientation
+        
 
-        twist = Twist()
-        twist.linear.x = linear_vel
-        twist.angular.z = angular_vel
-        self.publisher_.publish(twist)
-        self.get_logger().info(
-            f"CmdVel publicado: linear = {linear_vel:.2f} m/s, angular = {angular_vel:.2f} rad/s")
+        self.publisher_.publish(target_pose)
+        self.get_logger().debug(
+            f"Alvo publicado: x={target_x:.2f}, y={target_y:.2f}, theta={target_orientation:.2f}")
 
 def main(args=None):
     rclpy.init(args=args)

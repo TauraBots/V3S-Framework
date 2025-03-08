@@ -20,6 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'trajectory_node = v3s_soccer_trajectory.trajectory_node:main'
         ],
     },
 )
