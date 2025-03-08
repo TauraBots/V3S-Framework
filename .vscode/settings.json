@@ -1,0 +1,16 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/thxssio/projects/V3S-Soccer-Client/install/v3s_soccer_comm/lib/python3.10/site-packages",
+        "/home/thxssio/projects/V3S-Soccer-Client/install/v3s_soccer_behaviors/lib/python3.10/site-packages",
+        "/home/thxssio/projects/V3S-Soccer-Client/install/v3s_soccer_interfaces/local/lib/python3.10/dist-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/thxssio/projects/V3S-Soccer-Client/install/v3s_soccer_comm/lib/python3.10/site-packages",
+        "/home/thxssio/projects/V3S-Soccer-Client/install/v3s_soccer_behaviors/lib/python3.10/site-packages",
+        "/home/thxssio/projects/V3S-Soccer-Client/install/v3s_soccer_interfaces/local/lib/python3.10/dist-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ]
+}
