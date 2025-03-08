@@ -60,7 +60,7 @@ class TrajectoryNode(Node):
         self.target_pose = None
         self.waypoints = []
         
-        self.timer = self.create_timer(0.01, self.timer_callback)  
+        self.timer = self.create_timer(1/120, self.timer_callback)  
         
         self.get_logger().info(
             f"TrajectoryNode inicializado usando algoritmo '{self.trajectory_algorithm}'")

@@ -14,7 +14,7 @@ class BehaviorNode(Node):
             self.vision_callback,
             10)
 
-        self.publisher_ = self.create_publisher(PoseStamped, 'target_pose', 120)
+        self.publisher_ = self.create_publisher(PoseStamped, 'target_pose', 10)
         self.behavior = GoToBall()
         self.robot_index = 0
         self.get_logger().info("BehaviorNode inicializado - publicando alvos para o sistema de trajetória.")

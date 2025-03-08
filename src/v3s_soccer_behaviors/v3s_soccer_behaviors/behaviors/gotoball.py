@@ -2,7 +2,7 @@ import math
 from v3s_soccer_behaviors.behavior import Behavior
 
 class GoToBall(Behavior):
-    def __init__(self, offset_distance=0.3):
+    def __init__(self, offset_distance=0.07):
         """
         Inicializa o comportamento de ir à bola.
         
