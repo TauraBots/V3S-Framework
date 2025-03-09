@@ -27,14 +27,14 @@ class CommNode(Node):
         simulator_port = self.get_parameter('simulator_port').value
 
         self.sock_recv = self._create_recv_socket()
-        self.publisher_ = self.create_publisher(FieldDataMsg, 'vision_data', 120)
+        self.publisher_ = self.create_publisher(FieldDataMsg, 'vision_data', 10)
         self.subscription = self.create_subscription(
             Twist,
             'cmd_vel',
             self.cmd_callback,
             10
         )
-        self.timer = self.create_timer(0.1, self.timer_callback)
+        self.timer = self.create_timer(1/120, self.timer_callback)
         self.get_logger().info(f"CommNode inicializado. Recebendo de {self.receiver_ip}:{self.receiver_port}")
         self.get_logger().info(f"Enviando para simulador na porta {simulator_port}")
 
@@ -109,8 +109,8 @@ class CommNode(Node):
         left_speed = msg.linear.x - (msg.angular.z * wheel_separation / 2.0)
         right_speed = msg.linear.x + (msg.angular.z * wheel_separation / 2.0)
         
-        self.team_command.commands[self.robot_index].left_speed = left_speed
-        self.team_command.commands[self.robot_index].right_speed = right_speed
+        self.team_command.commands[self.robot_index].left_speed = left_speed 
+        self.team_command.commands[self.robot_index].right_speed = right_speed 
         
         self.control.update()
         self.get_logger().info(f"Comando enviado: wheel_left={left_speed:.2f}, wheel_right={right_speed:.2f}")
