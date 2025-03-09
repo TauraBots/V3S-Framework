@@ -5,27 +5,27 @@ from v3s_soccer_interfaces.msg import FieldData
 from geometry_msgs.msg import Twist, PoseStamped
 
 from v3s_soccer_trajectory.trajectories.direct_trajectory import DirectTrajectory
+from multiprocessing import Process, Queue
 
+
+def start_plot_process(plot_queue):
+    from v3s_soccer_trajectory.plot_process import plot_process  
+    plot_process(plot_queue)
 class TrajectoryNode(Node):
     """
     Nodo ROS responsável pelo planejamento e execução de trajetórias.
     Recebe alvos de comportamentos e gera comandos de velocidade para o robô.
     """
     
-    def __init__(self):
+    def __init__(self, plot_queue):
         super().__init__('trajectory_node')
-        
-
         self.declare_parameter('trajectory_algorithm', 'direct')
         self.declare_parameter('robot_index', 0)
-        
-
         self.trajectory_algorithm = self.get_parameter('trajectory_algorithm').value
         self.robot_index = self.get_parameter('robot_index').value
         
-
         self.trajectories = {
-            'direct': DirectTrajectory(),
+            'direct': DirectTrajectory(plot_queue=plot_queue),
         }
         
 
@@ -113,10 +113,21 @@ class TrajectoryNode(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    node = TrajectoryNode()
-    rclpy.spin(node)
-    node.destroy_node()
-    rclpy.shutdown()
+    plot_queue = Queue()
+    plot_proc = Process(target=start_plot_process, args=(plot_queue,))
+    plot_proc.daemon = True
+    plot_proc.start()
+    
+    node = TrajectoryNode(plot_queue=plot_queue)
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
+        plot_proc.terminate()
+        plot_proc.join()
 
 if __name__ == '__main__':
     main()

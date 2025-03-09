@@ -36,7 +36,7 @@ class DirectTrajectory(Trajectory):
             Lista de PoseStamped com os waypoints da trajetória
         """
         self.current_waypoints = [target_pose]
-        self.plot_trajectory(self.current_waypoints, field_data, target_pose, robot_index)
+        self.update_plot_data(self.current_waypoints, field_data, target_pose, robot_index)
         return self.current_waypoints
     
     def get_velocity_command(self, field_data: FieldData, robot_index: int, waypoints=None):
