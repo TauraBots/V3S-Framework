@@ -6,7 +6,7 @@ from v3s_soccer_trajectory.trajectory import Trajectory
 class DirectTrajectory(Trajectory):
     """Implementação simples de trajetória em linha reta direta ao alvo."""
     
-    def __init__(self, k_linear=50.0, k_angular=50.0, stop_distance=0.07, angle_threshold=0.1):
+    def __init__(self, k_linear=50.0, k_angular=50.0, stop_distance=0.07, angle_threshold=0.1, plot_queue=None):
         """
         Inicializa a trajetória direta.
         
@@ -16,7 +16,7 @@ class DirectTrajectory(Trajectory):
             stop_distance: Distância do alvo para considerar que chegou
             angle_threshold: Limiar de ângulo para ajuste de orientação
         """
-        super().__init__()
+        super().__init__(plot_queue=plot_queue)
         self.k_linear = k_linear
         self.k_angular = k_angular
         self.stop_distance = stop_distance
